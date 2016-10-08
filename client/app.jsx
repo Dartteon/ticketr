@@ -47,11 +47,12 @@ var TicketStatus = React.createClass({
 			{
 				this.props.ticket == null ?
 					<div className="get-ticket">
-						<button className="get-ticket-button" onClick={this.sendTicketRequestToBackend} />
-						<span className="get-ticket-text"> Press for Ticket </span>
+						<button className="get-ticket-button" onClick={this.sendTicketRequestToBackend}>
+							<span className="get-ticket-text"> Press for Ticket </span>
+						</button>
 					</div>
 				: <div className="ticket">
-						<div className="ticket-number">{this.props.ticket.ticket_num}</div>
+						<label>{this.props.ticket.ticket_num}</label>
 					</div>
 			}
 			</div>

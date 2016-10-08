@@ -94,23 +94,64 @@ html {
 }
 
 .get-ticket-button {
-  float: left;
-  margin-top: 12.5px;
-  margin-left: 20px;
-  height: 25px;
-  width: 25px;
-  background-color: #ff0024;
-  -moz-border-radius: 50px;
-	-webkit-border-radius: 50px;
-	border-radius: 50px;
+  margin-top: 7.5px;
+  height: 40px;
+  width: 100%;
+  background-color: #537074;
+  -moz-border-radius: 30px;
+	-webkit-border-radius: 30px;
+  border-bottom-left-radius: 100%0px;
+  border-bottom-right-radius: 100%0px;
+  border-color: transparent;
+}
+
+.get-ticket-button:hover {
+  border-style: solid;
+  border-top-color: #57777c;
+}
+
+.get-ticket-button:active {
+  border-style: solid;
+  border-top-color: #257580;
 }
 
 .get-ticket-text {
-  float: right;
-  margin-top: 12.5px;
-  margin-right: 20px;
+  font-family: 'Comfortaa', cursive;
   color: #cac9c9;
+  font-size: 24px;
 }
 
 .ticket {
+  display: block;
+  position: absolute;
+  bottom: 75px;
+  left: 25%;
+  width: 50%;
+  height: 236px;
+  line-height: 200px;
+  text-align: center;
+  vertical-align: middle;
+  background: #e6e1db;
+  text-decoration: none;
+}
+
+.ticket:before {
+  content: " ";
+  display: block;
+  position: relative;
+  bottom: 0px
+  left: 0px;
+  width: 100%;
+  height: 36px;
+  background: linear-gradient(#ec795d 0%, transparent 0%), linear-gradient(135deg, #e6e1db 33.33%, transparent 33.33%) 0 0%, #e6e1db linear-gradient(45deg, #e6e1db 33.33%, #ec795d 33.33%) 0 0%;
+  background: -webkit-linear-gradient(#ec795d 0%, transparent 0%), -webkit-linear-gradient(135deg, #e6e1db 33.33%, transparent 33.33%) 0 0%, #e6e1db -webkit-linear-gradient(45deg, #e6e1db 33.33%, #ec795d 33.33%) 0 0%;
+  background: -o-linear-gradient(#ec795d 0%, transparent 0%), -o-linear-gradient(135deg, #e6e1db 33.33%, transparent 33.33%) 0 0%, #e6e1db -o-linear-gradient(45deg, #e6e1db 33.33%, #ec795d 33.33%) 0 0%;
+  background: -moz-linear-gradient(#ec795d 0%, transparent 0%), -moz-linear-gradient(135deg, #e6e1db 33.33%, transparent 33.33%) 0 0%, #e6e1db -moz-linear-gradient(45deg, #e6e1db 33.33%, #ec795d 33.33%) 0 0%;
+  background-repeat: repeat-x;
+  background-size: 0px 100%, 9px 27px, 9px 27px;
+}
+
+.ticket label {
+  color: #545a5b;
+  font-size: 30px;
 }
