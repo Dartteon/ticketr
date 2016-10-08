@@ -12,7 +12,16 @@
     "express": "^4.13.1",
     "react": "^0.13.3",
     "socket.io": "^1.3.5",
-    "uuid": "^2.0.3"
+    "uuid": "^2.0.3",
+    
+    "jade": "1.6.*",
+    "serve-favicon": "2",
+    "morgan": "1.3.*",
+    "method-override":"*", //added missing ,
+    "body-parser": "1.8",
+    "errorhandler": "*",
+    "express-session": "*",
+    "multer": "0.1.*"
   },
   "devDependencies": {
     "babelify": "^6.1.3",
@@ -20,6 +29,15 @@
     "express": "^4.13.1",
     "react": "^0.13.3",
     "socket.io": "^1.3.5",
-    "uuid": "^2.0.3"
+    "uuid": "^2.0.3",
+    
+    "jade": "1.6.*",
+    "serve-favicon": "2",
+    "morgan": "1.3.*",
+    "method-override":"*", //added missing ,
+    "body-parser": "1.8",
+    "errorhandler": "*",
+    "express-session": "*",
+    "multer": "0.1.*"
   }
 }
