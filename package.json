@@ -1,5 +1,5 @@
 {
-  "name": "reactjs-socket-io-chat-app",
+  "name": "ticketr",
   "version": "0.6.9",
   "private": true,
   "scripts": {
@@ -37,5 +37,9 @@
     "errorhandler": "*",
     "express-session": "*",
     "multer": "0.1.*"
+  },
+  "engines": {
+    "node": "5.11.1",
+    "npm": "3.8.6"
   }
 }
