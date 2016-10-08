@@ -2,7 +2,6 @@
 'use strict';
 
 var React = require('react');
-
 var socket = io.connect();
 
 var QueueStatus = React.createClass({
@@ -12,42 +11,60 @@ var QueueStatus = React.createClass({
 		return React.createElement(
 			'div',
 			null,
-			console.log("queue is: ", this.props.queue),
-			console.log("ticket is: ", this.props.ticket),
 			this.props.ticket != null ? React.createElement(
 				'div',
 				null,
 				React.createElement(
-					'p',
-					null,
-					'No.of people in front: ',
-					this.props.ticket.num_in_front
+					'div',
+					{ className: 'num-in-front' },
+					React.createElement(
+						'div',
+						{ className: 'num-in-front-text' },
+						' ',
+						this.props.ticket.num_in_front,
+						' ahead '
+					)
 				),
 				React.createElement(
-					'p',
-					null,
-					'Estimated waiting time: ',
-					this.props.ticket.est_wait_time
+					'div',
+					{ className: 'est-time' },
+					React.createElement(
+						'div',
+						{ className: 'est-time-text' },
+						' ',
+						this.props.ticket.est_wait_time,
+						' mins left '
+					)
 				)
 			) : this.props.queue != null ? React.createElement(
 				'div',
 				null,
 				React.createElement(
-					'p',
-					null,
-					'No.of people in front: ',
-					this.props.queue.num_in_front
+					'div',
+					{ className: 'num-in-front' },
+					React.createElement(
+						'div',
+						{ className: 'num-in-front-text' },
+						' ',
+						this.props.queue.num_in_front,
+						' ahead '
+					)
 				),
 				React.createElement(
-					'p',
-					null,
-					'Estimated waiting time: ',
-					this.props.queue.est_wait_time
+					'div',
+					{ className: 'est-time' },
+					React.createElement(
+						'div',
+						{ className: 'est-time-text' },
+						' ',
+						this.props.queue.est_wait_time,
+						' mins left '
+					)
 				)
 			) : React.createElement(
 				'div',
-				null,
-				' No this.props.queue nor props.ticket passed'
+				{ className: 'loading' },
+				' //// Loading  '
 			)
 		);
 	}
@@ -57,26 +74,35 @@ var TicketStatus = React.createClass({
 	displayName: 'TicketStatus',
 
 	sendTicketRequestToBackend: function sendTicketRequestToBackend() {
-		var custId = 'def';
+		var custId = localStorage.getItem('ticketr_id');
 		socket.emit('receive:ticketrequest', custId);
 	},
 	render: function render() {
 		return React.createElement(
 			'div',
-			null,
+			{ className: 'ticket-machine' },
+			React.createElement(
+				'div',
+				{ className: 'ticket-machine-slot' },
+				React.createElement('div', { className: 'ticket-machine-slot-hole' })
+			),
 			this.props.ticket == null ? React.createElement(
 				'div',
-				null,
+				{ className: 'get-ticket' },
 				React.createElement(
 					'button',
-					{ onClick: this.sendTicketRequestToBackend },
-					'Get Ticket'
+					{ className: 'get-ticket-button', onClick: this.sendTicketRequestToBackend },
+					React.createElement(
+						'span',
+						{ className: 'get-ticket-text' },
+						' Press for Ticket '
+					)
 				)
 			) : React.createElement(
 				'div',
-				null,
+				{ className: 'ticket' },
 				React.createElement(
-					'p',
+					'label',
 					null,
 					this.props.ticket.ticket_num
 				)
@@ -85,170 +111,144 @@ var TicketStatus = React.createClass({
 	}
 });
 
-var UsersList = React.createClass({
-	displayName: 'UsersList',
-
-	render: function render() {
-		return React.createElement(
-			'div',
-			{ className: 'users' },
-			React.createElement(
-				'h3',
-				null,
-				' Online Users '
-			),
-			React.createElement(
-				'ul',
-				null,
-				this.props.users.map(function (user, i) {
-					return React.createElement(
-						'li',
-						{ key: i },
-						user
-					);
-				})
-			)
-		);
-	}
-});
-
-var Message = React.createClass({
-	displayName: 'Message',
-
-	render: function render() {
-		return React.createElement(
-			'div',
-			{ className: 'message' },
-			React.createElement(
-				'strong',
-				null,
-				this.props.user,
-				' :'
-			),
-			React.createElement(
-				'span',
-				null,
-				this.props.text
-			)
-		);
-	}
-});
-
-var MessageList = React.createClass({
-	displayName: 'MessageList',
-
-	render: function render() {
-		return React.createElement(
-			'div',
-			{ className: 'messages' },
-			React.createElement(
-				'h2',
-				null,
-				' Conversation: '
-			),
-			this.props.messages.map(function (message, i) {
-				return React.createElement(Message, {
-					key: i,
-					user: message.user,
-					text: message.text
-				});
-			})
-		);
-	}
-});
-
-var MessageForm = React.createClass({
-	displayName: 'MessageForm',
-
-	getInitialState: function getInitialState() {
-		return { text: '' };
-	},
-
-	handleSubmit: function handleSubmit(e) {
-		e.preventDefault();
-		var message = {
-			user: this.props.user,
-			text: this.state.text
-		};
-		this.props.onMessageSubmit(message);
-		this.setState({ text: '' });
-	},
-
-	changeHandler: function changeHandler(e) {
-		this.setState({ text: e.target.value });
-	},
-
-	render: function render() {
-		return React.createElement(
-			'div',
-			{ className: 'message_form' },
-			React.createElement(
-				'h3',
-				null,
-				'Write New Message'
-			),
-			React.createElement(
-				'form',
-				{ onSubmit: this.handleSubmit },
-				React.createElement('input', {
-					onChange: this.changeHandler,
-					value: this.state.text
-				})
-			)
-		);
-	}
-});
-
-var ChangeNameForm = React.createClass({
-	displayName: 'ChangeNameForm',
-
-	getInitialState: function getInitialState() {
-		return { newName: '' };
-	},
-
-	onKey: function onKey(e) {
-		this.setState({ newName: e.target.value });
-	},
-
-	handleSubmit: function handleSubmit(e) {
-		e.preventDefault();
-		var newName = this.state.newName;
-		this.props.onChangeName(newName);
-		this.setState({ newName: '' });
-	},
-
-	render: function render() {
-		return React.createElement(
-			'div',
-			{ className: 'change_name_form' },
-			React.createElement(
-				'h3',
-				null,
-				' Change Name '
-			),
-			React.createElement(
-				'form',
-				{ onSubmit: this.handleSubmit },
-				React.createElement('input', {
-					onChange: this.onKey,
-					value: this.state.newName
-				})
-			)
-		);
-	}
-});
+// var UsersList = React.createClass({
+// 	render() {
+// 		return (
+// 			<div className='users'>
+// 				<h3> Online Users </h3>
+// 				<ul>
+// 					{
+// 						this.props.users.map((user, i) => {
+// 							return (
+// 								<li key={i}>
+// 									{user}
+// 								</li>
+// 							);
+// 						})
+// 					}
+// 				</ul>
+// 			</div>
+// 		);
+// 	}
+// });
+//
+// var Message = React.createClass({
+// 	render() {
+// 		return (
+// 			<div className="message">
+// 				<strong>{this.props.user} :</strong>
+// 				<span>{this.props.text}</span>
+// 			</div>
+// 		);
+// 	}
+// });
+//
+// var MessageList = React.createClass({
+// 	render() {
+// 		return (
+// 			<div className='messages'>
+// 				<h2> Conversation: </h2>
+// 				{
+// 					this.props.messages.map((message, i) => {
+// 						return (
+// 							<Message
+// 								key={i}
+// 								user={message.user}
+// 								text={message.text}
+// 							/>
+// 						);
+// 					})
+// 				}
+// 			</div>
+// 		);
+// 	}
+// });
+//
+// var MessageForm = React.createClass({
+//
+// 	getInitialState() {
+// 		return {text: ''};
+// 	},
+//
+// 	handleSubmit(e) {
+// 		e.preventDefault();
+// 		var message = {
+// 			user : this.props.user,
+// 			text : this.state.text
+// 		}
+// 		this.props.onMessageSubmit(message);
+// 		this.setState({ text: '' });
+// 	},
+//
+// 	changeHandler(e) {
+// 		this.setState({ text : e.target.value });
+// 	},
+//
+// 	render() {
+// 		return(
+// 			<div className='message_form'>
+// 				<h3>Write New Message</h3>
+// 				<form onSubmit={this.handleSubmit}>
+// 					<input
+// 						onChange={this.changeHandler}
+// 						value={this.state.text}
+// 					/>
+// 				</form>
+// 			</div>
+// 		);
+// 	}
+// });
+//
+// var ChangeNameForm = React.createClass({
+// 	getInitialState() {
+// 		return {newName: ''};
+// 	},
+//
+// 	onKey(e) {
+// 		this.setState({ newName : e.target.value });
+// 	},
+//
+// 	handleSubmit(e) {
+// 		e.preventDefault();
+// 		var newName = this.state.newName;
+// 		this.props.onChangeName(newName);
+// 		this.setState({ newName: '' });
+// 	},
+//
+// 	render() {
+// 		return(
+// 			<div className='change_name_form'>
+// 				<h3> Change Name </h3>
+// 				<form onSubmit={this.handleSubmit}>
+// 					<input
+// 						onChange={this.onKey}
+// 						value={this.state.newName}
+// 					/>
+// 				</form>
+// 			</div>
+// 		);
+// 	}
+// });
 
 var App = React.createClass({
 	displayName: 'App',
 
+	// getInitialState() {
+	// 	return {users: [], messages:[], text: '', queue: null, ticket:
+	// 	null};
+	// },
+
 	getInitialState: function getInitialState() {
-		return { users: [], messages: [], text: '', queue: null, ticket: null };
+		return {
+			queue: null,
+			ticket: null
+		};
 	},
 
 	componentDidMount: function componentDidMount() {
 		socket.on('init', this._initialize);
-		socket.on('send:message', this._messageRecieve);
-		socket.on('user:join', this._userJoined);
+		// socket.on('send:message', this._messageRecieve);
+		// socket.on('user:join', this._userJoined);
 		socket.on('send:ticket', this._receiveTicket);
 		socket.on('send:queue', this._receiveQueue);
 		this.sendCustomerIdToBackend();
@@ -266,6 +266,7 @@ var App = React.createClass({
 	_receiveTicket: function _receiveTicket(data) {
 		console.log("Ticket received " + JSON.stringify(data));
 		var ticket = data;
+		localStorage.setItem('ticketr_id', data.customer_id);
 		this.setState({ ticket: ticket });
 	},
 
@@ -274,86 +275,71 @@ var App = React.createClass({
 		this.setState({ queue: queue });
 	},
 
-	_messageRecieve: function _messageRecieve(message) {
-		var messages = this.state.messages;
-
-		messages.push(message);
-		this.setState({ messages: messages });
-	},
-
-	_userJoined: function _userJoined(data) {
-		var _state = this.state;
-		var users = _state.users;
-		var messages = _state.messages;
-		var name = data.name;
-
-		users.push(name);
-		messages.push({
-			user: 'APPLICATION BOT',
-			text: name + ' Joined'
-		});
-		this.setState({ users: users, messages: messages });
-	},
-
-	_userLeft: function _userLeft(data) {
-		var _state2 = this.state;
-		var users = _state2.users;
-		var messages = _state2.messages;
-		var name = data.name;
-
-		var index = users.indexOf(name);
-		users.splice(index, 1);
-		messages.push({
-			user: 'APPLICATION BOT',
-			text: name + ' Left'
-		});
-		this.setState({ users: users, messages: messages });
-	},
-
-	_userChangedName: function _userChangedName(data) {
-		var oldName = data.oldName;
-		var newName = data.newName;
-		var _state3 = this.state;
-		var users = _state3.users;
-		var messages = _state3.messages;
-
-		var index = users.indexOf(oldName);
-		users.splice(index, 1, newName);
-		messages.push({
-			user: 'APPLICATION BOT',
-			text: 'Change Name : ' + oldName + ' ==> ' + newName
-		});
-		this.setState({ users: users, messages: messages });
-	},
+	// _messageRecieve(message) {
+	// 	var {messages} = this.state;
+	// 	messages.push(message);
+	// 	this.setState({messages});
+	// },
+	//
+	// _userJoined(data) {
+	// 	var {users, messages} = this.state;
+	// 	var {name} = data;
+	// 	users.push(name);
+	// 	messages.push({
+	// 		user: 'APPLICATION BOT',
+	// 		text : name +' Joined'
+	// 	});
+	// 	this.setState({users, messages});
+	// },
+	//
+	// _userLeft(data) {
+	// 	var {users, messages} = this.state;
+	// 	var {name} = data;
+	// 	var index = users.indexOf(name);
+	// 	users.splice(index, 1);
+	// 	messages.push({
+	// 		user: 'APPLICATION BOT',
+	// 		text : name +' Left'
+	// 	});
+	// 	this.setState({users, messages});
+	// },
+	//
+	// _userChangedName(data) {
+	// 	var {oldName, newName} = data;
+	// 	var {users, messages} = this.state;
+	// 	var index = users.indexOf(oldName);
+	// 	users.splice(index, 1, newName);
+	// 	messages.push({
+	// 		user: 'APPLICATION BOT',
+	// 		text : 'Change Name : ' + oldName + ' ==> '+ newName
+	// 	});
+	// 	this.setState({users, messages});
+	// },
 
 	sendCustomerIdToBackend: function sendCustomerIdToBackend() {
-		var custId = 'abc';
+		var custId = localStorage.getItem('ticketr_id');
 		socket.emit('receive:customerid', custId);
 	},
 
-	handleMessageSubmit: function handleMessageSubmit(message) {
-		var messages = this.state.messages;
-
-		messages.push(message);
-		this.setState({ messages: messages });
-		socket.emit('send:message', message);
-	},
-
-	handleChangeName: function handleChangeName(newName) {
-		var _this = this;
-
-		var oldName = this.state.user;
-		socket.emit('change:name', { name: newName }, function (result) {
-			if (!result) {
-				return alert('There was an error changing your name');
-			}
-			var users = _this.state.users;
-
-			var index = users.indexOf(oldName);
-			users.splice(index, 1, newName);
-			_this.setState({ users: users, user: newName });
-		});
-	},
+	// handleMessageSubmit(message) {
+	// 	var {messages} = this.state;
+	// 	messages.push(message);
+	// 	this.setState({messages});
+	// 	socket.emit('send:message', message);
+	// },
+	//
+	// handleChangeName(newName) {
+	// 	var oldName = this.state.user;
+	// 	socket.emit('change:name', { name : newName}, (result) => {
+	// 		if(!result) {
+	// 			return alert('There was an error changing your name');
+	// 		}
+	// 		var {users} = this.state;
+	// 		var index = users.indexOf(oldName);
+	// 		users.splice(index, 1, newName);
+	// 		this.setState({users, user: newName});
+	// 	});
+	// },
 
 	render: function render() {
 		return React.createElement(
@@ -363,31 +349,39 @@ var App = React.createClass({
 				queue: this.state.queue,
 				ticket: this.state.ticket
 			}),
+			React.createElement(
+				'div',
+				{ className: 'queue-animation' },
+				React.createElement('span', { className: 'in-queue-1' }),
+				React.createElement('span', { className: 'in-queue-2' }),
+				React.createElement('span', { className: 'in-queue-3' }),
+				React.createElement('span', { className: 'in-queue-4' })
+			),
 			React.createElement(TicketStatus, {
 				ticket: this.state.ticket
-			}),
-			React.createElement(UsersList, {
-				users: this.state.users
-			}),
-			React.createElement(MessageList, {
-				messages: this.state.messages
-			}),
-			React.createElement(MessageForm, {
-				onMessageSubmit: this.handleMessageSubmit,
-				user: this.state.user
-			}),
-			React.createElement(ChangeNameForm, {
-				onChangeName: this.handleChangeName
-			}),
-			React.createElement(MessageForm, {
-				onMessageSubmit: this.handleMessageSubmit,
-				user: this.state.user
 			})
 		);
 	}
 });
 
 React.render(React.createElement(App, null), document.getElementById('app'));
+/*<UsersList
+users={this.state.users}
+/>
+<MessageList
+messages={this.state.messages}
+/>
+<MessageForm
+onMessageSubmit={this.handleMessageSubmit}
+user={this.state.user}
+/>
+<ChangeNameForm
+onChangeName={this.handleChangeName}
+/>
+	<MessageForm
+onMessageSubmit={this.handleMessageSubmit}
+user={this.state.user}
+/>*/
 
 },{"react":157}],2:[function(require,module,exports){
 // shim for using process in browser
