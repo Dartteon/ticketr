@@ -44,6 +44,40 @@ html {
 }
 
 .queue-animation {
+  position: relative;
+  height: 500px;
+  line-height: 1000px;
+  text-align: right;
+  margin-right: 50px;
+  vertical-align: middle;
+}
+
+.in-queue {
+  width: 100px;
+	height: 100px;
+	background: #545a5b;
+  display: inline-block;
+  margin: 5px;
+	-moz-border-radius: 50px;
+	-webkit-border-radius: 50px;
+	border-radius: 50px;
+  animation-delay: 5s;
+  animation: shift 5s infinite forwards;
+}
+
+.in-queue.front {
+  text-align: center;
+  animation: move 5s infinite forwards;
+}
+
+@keyframes move{
+  0% { transform: translateX(0px);}
+  100% { transform: translateX(-2000px);}
+}
+
+@-webkit-keyframes shift {
+  0% { transform: translateX(0px);}
+  100% { transform: translateX(-100px);}
 }
 
 .ticket-machine {

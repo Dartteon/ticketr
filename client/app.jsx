@@ -293,10 +293,12 @@ var App = React.createClass({
 					ticket={this.state.ticket}
 				/>
 				<div className="queue-animation">
-					<span className="in-queue-1"></span>
-					<span className="in-queue-2"></span>
-					<span className="in-queue-3"></span>
-					<span className="in-queue-4"></span>
+					<div className="in-queue front"></div>
+					<div className="in-queue"></div>
+					<div className="in-queue"></div>
+					<div className="in-queue"></div>
+					<div className="in-queue"></div>
+					<div className="in-queue back"></div>
 				</div>
 				<TicketStatus
 					ticket={this.state.ticket}
