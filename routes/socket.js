@@ -1,34 +1,50 @@
+// export function for listening to the socket
 module.exports = function (socket) {
-    socket.emit('init', {
-        queueData: {
-            null
-        },
+  var name = "Default test name";
 
-        ticketData: {
-            null
-        }
+  // send the new user their name and a list of users
+  socket.emit('init', {
+    name: name,
+    users: userNames.get()
+  });
+
+  // notify other clients that a new user has joined
+  socket.broadcast.emit('user:join', {
+    name: name
+  });
+
+  // broadcast a user's message to other users
+  socket.on('send:message', function (data) {
+    socket.broadcast.emit('send:message', {
+      user: name,
+      text: data.text
     });
+  });
 
-    socket.on('retrieve:info', {
-        queueData: {
-            num_customers_in_front: 5,
-            est_wait_time: 50
-        },
+  // validate a user's name change, and broadcast it on success
+  socket.on('change:name', function (data, fn) {
+    if (userNames.claim(data.name)) {
+      var oldName = name;
+      userNames.free(oldName);
 
-        ticketData: {
-            null
-        }
+      name = data.name;
+      
+      socket.broadcast.emit('change:name', {
+        oldName: oldName,
+        newName: name
+      });
+
+      fn(true);
+    } else {
+      fn(false);
+    }
+  });
+
+  // clean up when a user leaves, and broadcast it to other users
+  socket.on('disconnect', function () {
+    socket.broadcast.emit('user:left', {
+      name: name
     });
-
-    
-    socket.on('get:ticket', function (data) {
-        console.log("Retrieved data from FE : " + JSON.stringify(data));
-        socket.broadcast.emit('send:ticketData', {
-            customer_id: a123,
-            ticket_num: b0001,
-            num_customers_in_front: 2,
-            est_wait_time: 20
-        });
-    });
-
-}
+    userNames.free(name);
+  });
+};
