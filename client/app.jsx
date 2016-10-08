@@ -4,6 +4,59 @@ var React = require('react');
 
 var socket = io.connect();
 
+var QueueStatus = React.createClass({
+	render() {
+		return (
+			<div>
+			{console.log("queue is: ", this.props.queue)}
+			{console.log("ticket is: ", this.props.ticket)}
+			{
+				this.props.ticket != null ?
+				<div>
+					<p>No.of people in front: {this.props.ticket.num_in_front}</p>
+					<p>Estimated waiting time: {this.props.ticket.est_wait_time}</p>
+				</div>
+				:
+				(
+					this.props.queue != null ?
+				
+					<div>
+						<p>No.of people in front: {this.props.queue.num_in_front}</p>
+						<p>Estimated waiting time: {this.props.queue.est_wait_time}</p>
+					</div>
+					:
+
+					<div> No this.props.queue nor props.ticket passed</div>
+				)
+			}
+			</div>
+			
+		);
+	}
+});
+
+var TicketStatus = React.createClass({
+	sendTicketRequestToBackend() {
+		var custId = 'def';
+		socket.emit('receive:ticketrequest', custId);
+	}, 
+	render() {
+		return (
+			<div>
+			{
+				this.props.ticket == null ?
+					<div><button onClick={this.sendTicketRequestToBackend}>Get Ticket</button></div>
+				: 
+				<div>
+					<p>{this.props.ticket.ticket_num}</p>
+				</div>
+			}
+				
+			</div>
+		);
+	}
+});
+
 var UsersList = React.createClass({
 	render() {
 		return (
@@ -92,6 +145,17 @@ var MessageForm = React.createClass({
 	}
 });
 
+
+
+
+
+
+
+
+
+
+
+
 var ChangeNameForm = React.createClass({
 	getInitialState() {
 		return {newName: ''};
@@ -123,23 +187,36 @@ var ChangeNameForm = React.createClass({
 	}
 });
 
-var ChatApp = React.createClass({
+var App = React.createClass({
 
 	getInitialState() {
-		return {users: [], messages:[], text: ''};
+		return {users: [], messages:[], text: '', queue: null, ticket: 
+		null};
 	},
 
 	componentDidMount() {
 		socket.on('init', this._initialize);
 		socket.on('send:message', this._messageRecieve);
 		socket.on('user:join', this._userJoined);
-		socket.on('user:left', this._userLeft);
-		socket.on('change:name', this._userChangedName);
+		socket.on('send:ticket', this._receiveTicket);
+		socket.on('send:queue', this._receiveQueue);
+		this.sendCustomerIdToBackend();
 	},
 
 	_initialize(data) {
-		var {users, name} = data;
-		this.setState({users, user: name});
+		var {users, name, queue, ticket} = data;
+		this.setState({users, user: name, queue: queue, ticket: ticket});
+	},
+
+	_receiveTicket(data) {
+		console.log("Ticket received " + JSON.stringify(data));
+		var ticket = data;
+		this.setState({ticket: ticket});
+	},
+
+	_receiveQueue(data) {
+		var queue = data;
+		this.setState({queue: queue});
 	},
 
 	_messageRecieve(message) {
@@ -183,6 +260,11 @@ var ChatApp = React.createClass({
 		this.setState({users, messages});
 	},
 
+	sendCustomerIdToBackend() {
+		var custId = 'abc';
+		socket.emit('receive:customerid', custId);
+	},
+
 	handleMessageSubmit(message) {
 		var {messages} = this.state;
 		messages.push(message);
@@ -206,6 +288,13 @@ var ChatApp = React.createClass({
 	render() {
 		return (
 			<div>
+				<QueueStatus 
+					queue={this.state.queue}
+					ticket={this.state.ticket}
+				/>
+				<TicketStatus
+					ticket={this.state.ticket}
+				/>
 				<UsersList
 					users={this.state.users}
 				/>
@@ -219,9 +308,14 @@ var ChatApp = React.createClass({
 				<ChangeNameForm
 					onChangeName={this.handleChangeName}
 				/>
+				
+				<MessageForm
+					onMessageSubmit={this.handleMessageSubmit}
+					user={this.state.user}
+				/>
 			</div>
 		);
 	}
 });
 
-React.render(<ChatApp/>, document.getElementById('app'));
+React.render(<App/>, document.getElementById('app'));

@@ -1,62 +1,46 @@
-// Keep track of which names are used so that there are no duplicates
-var userNames = (function () {
-  var names = {};
-
-  var claim = function (name) {
-    if (!name || names[name]) {
-      return false;
-    } else {
-      names[name] = true;
-      return true;
-    }
-  };
-
-  // find the lowest unused "guest" name and claim it
-  var getGuestName = function () {
-    var name,
-      nextUserId = 1;
-
-    do {
-      name = 'Guest ' + nextUserId;
-      nextUserId += 1;
-    } while (!claim(name));
-
-    return name;
-  };
-
-  // serialize claimed names as an array
-  var get = function () {
-    var res = [];
-    for (user in names) {
-      res.push(user);
-    }
-
-    return res;
-  };
-
-  var free = function (name) {
-    if (names[name]) {
-      delete names[name];
-    }
-  };
-
-  return {
-    claim: claim,
-    free: free,
-    get: get,
-    getGuestName: getGuestName
-  };
-}());
-
 // export function for listening to the socket
 module.exports = function (socket) {
-  var name = userNames.getGuestName();
+  var name = "Default test name";
 
   // send the new user their name and a list of users
   socket.emit('init', {
     name: name,
-    users: userNames.get()
+    users: [],
+    queue: {
+      num_in_front: "5",
+      est_wait_time: "50"
+    },
+    ticket: null
   });
+
+  
+  // broadcast a user's message to other users
+  socket.on('receive:customerid', function (data) {
+    console.log("Received customerId data " + JSON.stringify(data));
+
+    // socket.emit('send:ticket', {
+    //   num_in_front: "100",
+    //   est_wait_time: "10000",
+    //   ticket_num: "5"
+    // });
+  });
+
+  
+  // broadcast a user's message to other users
+  socket.on('receive:ticketrequest', function (data) {
+    console.log("Received ticket request for customerId " + JSON.stringify(data));
+
+    socket.emit('send:ticket', {
+      num_in_front: "hello",
+      est_wait_time: "nerd",
+      ticket_num: "lol"
+    });
+  });
+
+
+
+
+  //===================================================
 
   // notify other clients that a new user has joined
   socket.broadcast.emit('user:join', {
@@ -65,36 +49,21 @@ module.exports = function (socket) {
 
   // broadcast a user's message to other users
   socket.on('send:message', function (data) {
-    socket.broadcast.emit('send:message', {
-      user: name,
-      text: data.text
+    console.log("Received message data " + JSON.stringify(data));
+    socket.emit('send:ticket', {
+      num_in_front: "100",
+      est_wait_time: "10000"
     });
   });
 
+
+
   // validate a user's name change, and broadcast it on success
   socket.on('change:name', function (data, fn) {
-    if (userNames.claim(data.name)) {
-      var oldName = name;
-      userNames.free(oldName);
-
-      name = data.name;
-      
-      socket.broadcast.emit('change:name', {
-        oldName: oldName,
-        newName: name
-      });
-
-      fn(true);
-    } else {
-      fn(false);
-    }
   });
 
   // clean up when a user leaves, and broadcast it to other users
   socket.on('disconnect', function () {
-    socket.broadcast.emit('user:left', {
-      name: name
-    });
-    userNames.free(name);
+    
   });
 };

@@ -5,6 +5,86 @@ var React = require('react');
 
 var socket = io.connect();
 
+var QueueStatus = React.createClass({
+	displayName: 'QueueStatus',
+
+	render: function render() {
+		return React.createElement(
+			'div',
+			null,
+			console.log("queue is: ", this.props.queue),
+			console.log("ticket is: ", this.props.ticket),
+			this.props.ticket != null ? React.createElement(
+				'div',
+				null,
+				React.createElement(
+					'p',
+					null,
+					'No.of people in front: ',
+					this.props.ticket.num_in_front
+				),
+				React.createElement(
+					'p',
+					null,
+					'Estimated waiting time: ',
+					this.props.ticket.est_wait_time
+				)
+			) : this.props.queue != null ? React.createElement(
+				'div',
+				null,
+				React.createElement(
+					'p',
+					null,
+					'No.of people in front: ',
+					this.props.queue.num_in_front
+				),
+				React.createElement(
+					'p',
+					null,
+					'Estimated waiting time: ',
+					this.props.queue.est_wait_time
+				)
+			) : React.createElement(
+				'div',
+				null,
+				' No this.props.queue nor props.ticket passed'
+			)
+		);
+	}
+});
+
+var TicketStatus = React.createClass({
+	displayName: 'TicketStatus',
+
+	sendTicketRequestToBackend: function sendTicketRequestToBackend() {
+		var custId = 'def';
+		socket.emit('receive:ticketrequest', custId);
+	},
+	render: function render() {
+		return React.createElement(
+			'div',
+			null,
+			this.props.ticket == null ? React.createElement(
+				'div',
+				null,
+				React.createElement(
+					'button',
+					{ onClick: this.sendTicketRequestToBackend },
+					'Get Ticket'
+				)
+			) : React.createElement(
+				'div',
+				null,
+				React.createElement(
+					'p',
+					null,
+					this.props.ticket.ticket_num
+				)
+			)
+		);
+	}
+});
+
 var UsersList = React.createClass({
 	displayName: 'UsersList',
 
@@ -158,26 +238,40 @@ var ChangeNameForm = React.createClass({
 	}
 });
 
-var ChatApp = React.createClass({
-	displayName: 'ChatApp',
+var App = React.createClass({
+	displayName: 'App',
 
 	getInitialState: function getInitialState() {
-		return { users: [], messages: [], text: '' };
+		return { users: [], messages: [], text: '', queue: null, ticket: null };
 	},
 
 	componentDidMount: function componentDidMount() {
 		socket.on('init', this._initialize);
 		socket.on('send:message', this._messageRecieve);
 		socket.on('user:join', this._userJoined);
-		socket.on('user:left', this._userLeft);
-		socket.on('change:name', this._userChangedName);
+		socket.on('send:ticket', this._receiveTicket);
+		socket.on('send:queue', this._receiveQueue);
+		this.sendCustomerIdToBackend();
 	},
 
 	_initialize: function _initialize(data) {
 		var users = data.users;
 		var name = data.name;
+		var queue = data.queue;
+		var ticket = data.ticket;
 
-		this.setState({ users: users, user: name });
+		this.setState({ users: users, user: name, queue: queue, ticket: ticket });
+	},
+
+	_receiveTicket: function _receiveTicket(data) {
+		console.log("Ticket received " + JSON.stringify(data));
+		var ticket = data;
+		this.setState({ ticket: ticket });
+	},
+
+	_receiveQueue: function _receiveQueue(data) {
+		var queue = data;
+		this.setState({ queue: queue });
 	},
 
 	_messageRecieve: function _messageRecieve(message) {
@@ -232,6 +326,11 @@ var ChatApp = React.createClass({
 		this.setState({ users: users, messages: messages });
 	},
 
+	sendCustomerIdToBackend: function sendCustomerIdToBackend() {
+		var custId = 'abc';
+		socket.emit('receive:customerid', custId);
+	},
+
 	handleMessageSubmit: function handleMessageSubmit(message) {
 		var messages = this.state.messages;
 
@@ -260,6 +359,13 @@ var ChatApp = React.createClass({
 		return React.createElement(
 			'div',
 			null,
+			React.createElement(QueueStatus, {
+				queue: this.state.queue,
+				ticket: this.state.ticket
+			}),
+			React.createElement(TicketStatus, {
+				ticket: this.state.ticket
+			}),
 			React.createElement(UsersList, {
 				users: this.state.users
 			}),
@@ -272,12 +378,16 @@ var ChatApp = React.createClass({
 			}),
 			React.createElement(ChangeNameForm, {
 				onChangeName: this.handleChangeName
+			}),
+			React.createElement(MessageForm, {
+				onMessageSubmit: this.handleMessageSubmit,
+				user: this.state.user
 			})
 		);
 	}
 });
 
-React.render(React.createElement(ChatApp, null), document.getElementById('app'));
+React.render(React.createElement(App, null), document.getElementById('app'));
 
 },{"react":157}],2:[function(require,module,exports){
 // shim for using process in browser
