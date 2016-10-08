@@ -35,7 +35,7 @@ var QueueStatus = React.createClass({
 
 var TicketStatus = React.createClass({
 	sendTicketRequestToBackend() {
-		var custId = 'def';
+		var custId = localStorage.getItem('ticketr_id');
 		socket.emit('receive:ticketrequest', custId);
 	},
 	render() {
@@ -210,6 +210,7 @@ var App = React.createClass({
 	_receiveTicket(data) {
 		console.log("Ticket received " + JSON.stringify(data));
 		var ticket = data;
+		localStorage.setItem('ticketr_id', data.customer_id);
 		this.setState({ticket: ticket});
 	},
 
@@ -260,7 +261,7 @@ var App = React.createClass({
 	// },
 
 	sendCustomerIdToBackend() {
-		var custId = 'abc';
+		var custId = localStorage.getItem('ticketr_id');
 		socket.emit('receive:customerid', custId);
 	},
 
@@ -291,7 +292,12 @@ var App = React.createClass({
 					queue={this.state.queue}
 					ticket={this.state.ticket}
 				/>
-				<div className="queue-animation"></div>
+				<div className="queue-animation">
+					<span className="in-queue-1"></span>
+					<span className="in-queue-2"></span>
+					<span className="in-queue-3"></span>
+					<span className="in-queue-4"></span>
+				</div>
 				<TicketStatus
 					ticket={this.state.ticket}
 				/>
