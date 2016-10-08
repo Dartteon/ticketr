@@ -1,1 +1,116 @@
+html {
+  height: 100%;
+  width: 100%;
+  background-color: #ec795d;
+}
 
+#app {
+  font-family: 'Comfortaa', cursive;
+}
+
+.num-in-front {
+  position: absolute;
+  left: 0;
+  top: 50px;
+}
+
+.est-time {
+  position: absolute;
+  left: 0;
+  top: 120px;
+}
+
+.num-in-front,
+.est-time {
+  background-color: #e6e1db;
+  height: 50px;
+  width: 500px;
+  -moz-border-radius: 30px;
+	-webkit-border-radius: 30px;
+  border-top-left-radius: 100%0px;
+  border-bottom-left-radius: 100%0px;
+}
+
+.num-in-front-text,
+.est-time-text {
+  font-weight: bold;
+  font-size: 28px;
+  color: #545a5b;
+  padding-left: 28px;
+  padding-top: 8px;
+}
+
+.loading {
+}
+
+.queue-animation {
+}
+
+.ticket-machine {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  height: 50px;
+  background-color: #628489;
+  -moz-border-radius: 30px;
+	-webkit-border-radius: 30px;
+  border-bottom-left-radius: 100%0px;
+  border-bottom-right-radius: 100%0px;
+}
+
+.ticket-machine-slot {
+  position: absolute;
+  bottom: 50px;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+  height: 50px;
+  background-color: #545a5b;
+  -moz-border-radius: 30px;
+	-webkit-border-radius: 30px;
+  border-bottom-left-radius: 100%0px;
+  border-bottom-right-radius: 100%0px;
+}
+
+.ticket-machine-slot-hole {
+  position: absolute;
+  bottom: 12.5px;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+  height: 25px;
+  background-color: #cac9c9;
+  -moz-border-radius: 30px;
+	-webkit-border-radius: 30px;
+  border-radius: 30px;
+}
+
+.get-ticket-button {
+  float: left;
+  margin-top: 12.5px;
+  margin-left: 20px;
+  height: 25px;
+  width: 25px;
+  background-color: #ff0024;
+  -moz-border-radius: 50px;
+	-webkit-border-radius: 50px;
+	border-radius: 50px;
+}
+
+.get-ticket-text {
+  float: right;
+  margin-top: 12.5px;
+  margin-right: 20px;
+  color: #cac9c9;
+}
+
+.ticket {
+}
