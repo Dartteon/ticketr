@@ -17,18 +17,16 @@ module.exports = function (socket) {
 
 
   // broadcast a user's message to other users
-  socket.on('receive:customerid', function (data) {
-    console.log("Received customerId data " + JSON.stringify(data));
-    queueManager.connectNewClient(socket);
-    // socket.emit('send:ticket', {
-    //   num_in_front: "100",
-    //   est_wait_time: "10000",
-    //   ticket_num: "5"
-    // });
+  socket.on('receive:customerid', function (customerId) {
+    var jsonObj = {};
+    jsonObj.client = socket;
+    jsonObj.customerId = customerId;
+    queueManager.connectNewClient(jsonObj);
   });
 
   socket.on('receive:ticketrequest', function (customerId) {
     console.log("Data is = " + JSON.stringify(customerId));
+    console.log("SOCKET ID = " + socket.id);
     var customerData = {
       customerId: customerId,
       clientId: socket.id

@@ -18,10 +18,6 @@ app.set('views', __dirname + '/views');
 app.use(express.static(__dirname + '/public'));
 app.set('port', (process.env.PORT || 5000));
 
-// if (process.env.NODE_ENV === 'development') {
-//   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-// }
-
 /* Socket.io Communication */
 var io = require('socket.io').listen(server);
 io.sockets.on('connection', socket);
