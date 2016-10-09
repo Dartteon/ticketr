@@ -28,12 +28,26 @@ module.exports = function (socket) {
     }
     queueManager.createTicket(customerData);
   });
+  
 
 
-  socket.on('dequeue:nextticket', function (data) {
-    queueManager.dequeueTicket();
+  socket.on('receive:merchantid', function (merchantId) {
+    console.log("Received merchant id called " + "\n\n\n");
+    var jsonObj = {};
+    jsonObj.client = socket;
+    jsonObj.customerId = merchantId;
+    queueManager.connectNewMerchant(jsonObj);
   });
   socket.on('dequeue:nextticket', function (data) {
     queueManager.dequeueTicket();
   });
+  socket.on('changetimeperticket:increment', function () {
+    queueManager.incrementTimePerTicket();
+  });
+  socket.on('changetimeperticket:decrement', function () {
+    queueManager.decrementTimePerTicket();
+  });
+  // socket.on('dequeue:specificticket', function (data) {
+  //   queueManager.dequeueTicket();
+  // });
 };

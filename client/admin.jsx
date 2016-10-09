@@ -5,10 +5,10 @@ var socket = io.connect();
 
 var MerchantStatus = React.createClass({
 	sendDecreaseTimeRequestToBackend() {
-		socket.emit('changetimeperticket:decrease', null);
+		socket.emit('changetimeperticket:decrement', null);
 	},
 	sendIncreaseTimeRequestToBackend() {
-		socket.emit('changetimeperticket:increase', null);
+		socket.emit('changetimeperticket:increment', null);
 	},
 	sendDequeueRequestToBackend() {
 		socket.emit('dequeue:nextticket', null);
