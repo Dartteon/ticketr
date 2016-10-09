@@ -47,7 +47,7 @@ function createTicket(customerData) {
         updateAllClients();
         return;
     }
-    var ticketNum = currTicketNum++;
+    var ticketNum = formatTicketNumber(currTicketNum++);
     var newTicket = {
         ticket_num: ticketNum,
         customer_id: customerId,
@@ -64,7 +64,7 @@ function createTicket(customerData) {
     console.log("custIdToClientId\n" + JSON.stringify(custIdToClientId) + "\n\n");
     console.log("clientIdToCustId\n" + JSON.stringify(clientIdToCustId) + "\n\n");
     console.log("custIdToTicket\n" + JSON.stringify(custIdToTicket) + "\n\n");
-    
+
     updateAllClients();
     // dequeueTicket();
 }
@@ -79,7 +79,7 @@ function removeSpecificTicket(customerId) {
         return;
     }
     poppedClient.emit('send:ticket', {
-        num_in_front: -1,
+        num_in_front: 0,
         est_wait_time: 0
     });
 
@@ -105,10 +105,10 @@ function dequeueTicket() {
     console.log("Poppedcustid = " + poppedCustId + "\n\n");
     console.log("Dequeue ticket called, q len = " + queue.length);
 
-console.log("clientIdToTicket\n" + JSON.stringify(clientIdToTicket) + "\n\n");
-console.log("custIdToClientId\n" + JSON.stringify(custIdToClientId) + "\n\n");
-console.log("clientIdToCustId\n" + JSON.stringify(clientIdToCustId) + "\n\n");
-console.log("custIdToTicket\n" + JSON.stringify(custIdToTicket) + "\n\n");
+    console.log("clientIdToTicket\n" + JSON.stringify(clientIdToTicket) + "\n\n");
+    console.log("custIdToClientId\n" + JSON.stringify(custIdToClientId) + "\n\n");
+    console.log("clientIdToCustId\n" + JSON.stringify(clientIdToCustId) + "\n\n");
+    console.log("custIdToTicket\n" + JSON.stringify(custIdToTicket) + "\n\n");
 
     if (poppedClient == undefined) {
         console.log("Error popping");
@@ -181,6 +181,21 @@ function testEmitter(socketid) {
     //   est_wait_time: "emit",
     //   ticket_num: "received"
     // });
+}
+
+function formatTicketNumber(originalTicketNumber) {
+    if (!isNaN(originalTicketNumber)) {
+        if (originalTicketNumber < 10) {
+            return "000" + originalTicketNumber;
+        }
+        else if (originalTicketNumber < 100) {
+            return "00" + originalTicketNumber;
+        } else if (originalTicketNumber < 1000) {
+            return "0" + originalTicketNumber;
+        } else {
+            return originalTicketNumber;
+        }
+    }
 }
 
 module.exports = {
