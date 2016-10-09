@@ -252,6 +252,10 @@ var App = React.createClass({
 		socket.on('send:ticket', this._receiveTicket);
 		socket.on('send:queue', this._receiveQueue);
 		this.sendCustomerIdToBackend();
+		// var newURL = window.location.protocol + "//" + window.location.host + "/" + window.location.pathname;
+		// var pathArray = window.location.pathname.split( '/' );
+		// console.log('URL: ', newURL);
+		// console.log('path: ', pathArray);
 	},
 
 	_initialize: function _initialize(data) {
@@ -351,11 +355,12 @@ var App = React.createClass({
 			}),
 			React.createElement(
 				'div',
-				{ className: 'queue-animation' },
-				React.createElement('span', { className: 'in-queue-1' }),
-				React.createElement('span', { className: 'in-queue-2' }),
-				React.createElement('span', { className: 'in-queue-3' }),
-				React.createElement('span', { className: 'in-queue-4' })
+				{ className: 'queue-animate' },
+				React.createElement('div', { className: 'in-queue' }),
+				React.createElement('div', { className: 'in-queue' }),
+				React.createElement('div', { className: 'in-queue' }),
+				React.createElement('div', { className: 'in-queue' }),
+				React.createElement('div', { className: 'in-queue' })
 			),
 			React.createElement(TicketStatus, {
 				ticket: this.state.ticket
@@ -365,23 +370,30 @@ var App = React.createClass({
 });
 
 React.render(React.createElement(App, null), document.getElementById('app'));
-/*<UsersList
-users={this.state.users}
-/>
-<MessageList
-messages={this.state.messages}
-/>
-<MessageForm
-onMessageSubmit={this.handleMessageSubmit}
-user={this.state.user}
-/>
-<ChangeNameForm
-onChangeName={this.handleChangeName}
-/>
-	<MessageForm
-onMessageSubmit={this.handleMessageSubmit}
-user={this.state.user}
-/>*/
+/*<div className="queue-animation">
+<div className="in-queue front"></div>
+<div className="in-queue"></div>
+<div className="in-queue"></div>
+<div className="in-queue"></div>
+<div className="in-queue"></div>
+<div className="in-queue back"></div>
+</div>*/ /*<UsersList
+         users={this.state.users}
+         />
+         <MessageList
+         messages={this.state.messages}
+         />
+         <MessageForm
+         onMessageSubmit={this.handleMessageSubmit}
+         user={this.state.user}
+         />
+         <ChangeNameForm
+         onChangeName={this.handleChangeName}
+         />
+         	<MessageForm
+         onMessageSubmit={this.handleMessageSubmit}
+         user={this.state.user}
+         />*/
 
 },{"react":157}],2:[function(require,module,exports){
 // shim for using process in browser
