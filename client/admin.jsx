@@ -3,314 +3,70 @@
 var React = require('react');
 var socket = io.connect();
 
-var QueueStatus = React.createClass({
+var MerchantStatus = React.createClass({
+	sendDecreaseTimeRequestToBackend() {
+		socket.emit('changetimeperticket:decrease', null);
+	},
+	sendIncreaseTimeRequestToBackend() {
+		socket.emit('changetimeperticket:increase', null);
+	},
+	sendDequeueRequestToBackend() {
+		socket.emit('dequeue:nextticket', null);
+	},
 	render() {
 		return (
 			<div>
 			{
-				this.props.ticket != null ?
-					<div>
-                    "HOOOO"
+				this.props.merchantData == null ?
+					<div className="loading"></div>
+				: <div>
+							<span>Total Customers in Queue: {this.props.merchantData.total_cust_in_queue}</span>
+							<span>Total Estimated Waiting Time: {this.props.merchantData.total_est_waiting_time}</span>
+							<span>Time per Ticket: {this.props.merchantData.time_per_ticket}</span>
+							<span>Next Ticket Number: {this.props.merchantData.next_ticket_num}</span>
 					</div>
-				: this.props.queue != null ?
-				<div>
-                    "HOOOO"
-				</div>
-					: <div className="loading"> WEE  </div>
 			}
+			<button onClick={this.sendDecreaseTimeRequestToBackend}>
+				<span> Decrease </span>
+			</button>
+			<button onClick={this.sendIncreaseTimeRequestToBackend}>
+				<span> Increase </span>
+			</button>
+			<button onClick={this.sendDequeueRequestToBackend}>
+				<span> Pop </span>
+			</button>
 			</div>
 		);
 	}
 });
-
-var TicketStatus = React.createClass({
-	sendTicketRequestToBackend() {
-		var custId = localStorage.getItem('ticketr_id');
-		socket.emit('receive:ticketrequest', custId);
-	},
-	render() {
-		return (
-			<div className="ticket-machine">
-				<div className="ticket-machine-slot">
-					<div className="ticket-machine-slot-hole"></div>
-				</div>
-			{
-				this.props.ticket == null ?
-					<div className="get-ticket">
-						<button className="get-ticket-button" onClick={this.sendTicketRequestToBackend}>
-							<span className="get-ticket-text"> Press for Ticket </span>
-						</button>
-					</div>
-				: <div className="ticket">
-						<label>{this.props.ticket.ticket_num}</label>
-					</div>
-			}
-			</div>
-		);
-	}
-});
-
-// var UsersList = React.createClass({
-// 	render() {
-// 		return (
-// 			<div className='users'>
-// 				<h3> Online Users </h3>
-// 				<ul>
-// 					{
-// 						this.props.users.map((user, i) => {
-// 							return (
-// 								<li key={i}>
-// 									{user}
-// 								</li>
-// 							);
-// 						})
-// 					}
-// 				</ul>
-// 			</div>
-// 		);
-// 	}
-// });
-//
-// var Message = React.createClass({
-// 	render() {
-// 		return (
-// 			<div className="message">
-// 				<strong>{this.props.user} :</strong>
-// 				<span>{this.props.text}</span>
-// 			</div>
-// 		);
-// 	}
-// });
-//
-// var MessageList = React.createClass({
-// 	render() {
-// 		return (
-// 			<div className='messages'>
-// 				<h2> Conversation: </h2>
-// 				{
-// 					this.props.messages.map((message, i) => {
-// 						return (
-// 							<Message
-// 								key={i}
-// 								user={message.user}
-// 								text={message.text}
-// 							/>
-// 						);
-// 					})
-// 				}
-// 			</div>
-// 		);
-// 	}
-// });
-//
-// var MessageForm = React.createClass({
-//
-// 	getInitialState() {
-// 		return {text: ''};
-// 	},
-//
-// 	handleSubmit(e) {
-// 		e.preventDefault();
-// 		var message = {
-// 			user : this.props.user,
-// 			text : this.state.text
-// 		}
-// 		this.props.onMessageSubmit(message);
-// 		this.setState({ text: '' });
-// 	},
-//
-// 	changeHandler(e) {
-// 		this.setState({ text : e.target.value });
-// 	},
-//
-// 	render() {
-// 		return(
-// 			<div className='message_form'>
-// 				<h3>Write New Message</h3>
-// 				<form onSubmit={this.handleSubmit}>
-// 					<input
-// 						onChange={this.changeHandler}
-// 						value={this.state.text}
-// 					/>
-// 				</form>
-// 			</div>
-// 		);
-// 	}
-// });
-//
-// var ChangeNameForm = React.createClass({
-// 	getInitialState() {
-// 		return {newName: ''};
-// 	},
-//
-// 	onKey(e) {
-// 		this.setState({ newName : e.target.value });
-// 	},
-//
-// 	handleSubmit(e) {
-// 		e.preventDefault();
-// 		var newName = this.state.newName;
-// 		this.props.onChangeName(newName);
-// 		this.setState({ newName: '' });
-// 	},
-//
-// 	render() {
-// 		return(
-// 			<div className='change_name_form'>
-// 				<h3> Change Name </h3>
-// 				<form onSubmit={this.handleSubmit}>
-// 					<input
-// 						onChange={this.onKey}
-// 						value={this.state.newName}
-// 					/>
-// 				</form>
-// 			</div>
-// 		);
-// 	}
-// });
 
 var App = React.createClass({
-
-	// getInitialState() {
-	// 	return {users: [], messages:[], text: '', queue: null, ticket:
-	// 	null};
-	// },
-
 	getInitialState() {
 		return {
-			queue: null,
-			ticket: null
+			merchantData: null
 		};
 	},
 
 	componentDidMount() {
-		socket.on('init', this._initialize);
-		// socket.on('send:message', this._messageRecieve);
-		// socket.on('user:join', this._userJoined);
-		socket.on('send:ticket', this._receiveTicket);
-		socket.on('send:queue', this._receiveQueue);
-		this.sendCustomerIdToBackend();
+		socket.on('send:merchantdata', this._receiveMerchantData);
+		this.sendMerchantIdToBackend();
 	},
 
-	_initialize(data) {
-		var {users, name, queue, ticket} = data;
-		this.setState({users, user: name, queue: queue, ticket: ticket});
+	_receiveMerchantData(data) {
+		var merchantData = data;
+		this.setState({merchantData: merchantData});
 	},
 
-	_receiveTicket(data) {
-		console.log("Ticket received " + JSON.stringify(data));
-		var ticket = data;
-		localStorage.setItem('ticketr_id', data.customer_id);
-		this.setState({ticket: ticket});
+	sendMerchantIdToBackend() {
+		socket.emit('receive:merchantid', null);
 	},
-
-	_receiveQueue(data) {
-		var queue = data;
-		this.setState({queue: queue});
-	},
-
-	// _messageRecieve(message) {
-	// 	var {messages} = this.state;
-	// 	messages.push(message);
-	// 	this.setState({messages});
-	// },
-	//
-	// _userJoined(data) {
-	// 	var {users, messages} = this.state;
-	// 	var {name} = data;
-	// 	users.push(name);
-	// 	messages.push({
-	// 		user: 'APPLICATION BOT',
-	// 		text : name +' Joined'
-	// 	});
-	// 	this.setState({users, messages});
-	// },
-	//
-	// _userLeft(data) {
-	// 	var {users, messages} = this.state;
-	// 	var {name} = data;
-	// 	var index = users.indexOf(name);
-	// 	users.splice(index, 1);
-	// 	messages.push({
-	// 		user: 'APPLICATION BOT',
-	// 		text : name +' Left'
-	// 	});
-	// 	this.setState({users, messages});
-	// },
-	//
-	// _userChangedName(data) {
-	// 	var {oldName, newName} = data;
-	// 	var {users, messages} = this.state;
-	// 	var index = users.indexOf(oldName);
-	// 	users.splice(index, 1, newName);
-	// 	messages.push({
-	// 		user: 'APPLICATION BOT',
-	// 		text : 'Change Name : ' + oldName + ' ==> '+ newName
-	// 	});
-	// 	this.setState({users, messages});
-	// },
-
-	sendCustomerIdToBackend() {
-		var custId = localStorage.getItem('ticketr_id');
-		socket.emit('receive:customerid', custId);
-	},
-
-	// handleMessageSubmit(message) {
-	// 	var {messages} = this.state;
-	// 	messages.push(message);
-	// 	this.setState({messages});
-	// 	socket.emit('send:message', message);
-	// },
-	//
-	// handleChangeName(newName) {
-	// 	var oldName = this.state.user;
-	// 	socket.emit('change:name', { name : newName}, (result) => {
-	// 		if(!result) {
-	// 			return alert('There was an error changing your name');
-	// 		}
-	// 		var {users} = this.state;
-	// 		var index = users.indexOf(oldName);
-	// 		users.splice(index, 1, newName);
-	// 		this.setState({users, user: newName});
-	// 	});
-	// },
 
 	render() {
 		return (
 			<div>
-				<QueueStatus
-					queue={this.state.queue}
-					ticket={this.state.ticket}
+				<MerchantStatus
+					merchantData={this.state.merchantData}
 				/>
-				<div className="queue-animation">
-					<div className="in-queue front"></div>
-					<div className="in-queue"></div>
-					<div className="in-queue"></div>
-					<div className="in-queue"></div>
-					<div className="in-queue"></div>
-					<div className="in-queue back"></div>
-				</div>
-				<TicketStatus
-					ticket={this.state.ticket}
-				/>
-				{/*<UsersList
-					users={this.state.users}
-				/>
-				<MessageList
-					messages={this.state.messages}
-				/>
-				<MessageForm
-					onMessageSubmit={this.handleMessageSubmit}
-					user={this.state.user}
-				/>
-				<ChangeNameForm
-					onChangeName={this.handleChangeName}
-				/>
-
-				<MessageForm
-					onMessageSubmit={this.handleMessageSubmit}
-					user={this.state.user}
-				/>*/}
 			</div>
 		);
 	}
