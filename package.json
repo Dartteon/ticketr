@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "build": "browserify ./client/app.jsx -t babelify --outfile ./public/js/app.js",
+    "buildadmin": "browserify ./client/admin.jsx -t babelify --outfile ./admin/js/app.js",
     "start": "node app.js"
   },
   "dependencies": {
