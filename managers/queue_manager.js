@@ -171,7 +171,7 @@ function dequeueTicket() {
         console.log("Nothing in queue to dequeue!");
         return;
     }
-    var poppedTicket = queue.pop();
+    var poppedTicket = queue.shift();
     var poppedCustId = poppedTicket.customer_id;
     var poppedClientId = custIdToClientId[poppedCustId];
     var poppedClient = custClients[poppedClientId];
@@ -191,7 +191,7 @@ function dequeueTicket() {
 
     poppedClient.emit('send:ticket', {
         ticket_num: "Your Turn!",
-        num_in_front: -1,
+        num_in_front: 0,
         est_wait_time: 0
     });
 
