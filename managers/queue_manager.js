@@ -1,6 +1,6 @@
 var uuid = require('uuid');
-var config = require('../config.json');
-var twilioClient = require('../twilioClient');
+// var config = require('../config.json');
+// var twilioClient = require('../twilioClient');
 
 var queue = [];
 // var clients = [];
@@ -208,7 +208,8 @@ function dequeueTicket() {
     if (customerPhone != undefined && customerPhone.length == 8) {
         customerPhone = '(+65)' + customerPhone;
         var msg = "Your ticket (" + poppedTicket.ticket_num + ") has been called!";
-        twilioClient.sendSms(customerPhone, msg);
+        // if (twilioClient != undefined)
+        //     twilioClient.sendSms(customerPhone, msg);
     }
 
     delete custClients[poppedClientId];
