@@ -22,57 +22,73 @@ var MerchantStatus = React.createClass({
 			null,
 			this.props.merchantData == null ? React.createElement('div', { className: 'loading' }) : React.createElement(
 				'div',
-				null,
+				{ className: 'merchant' },
 				React.createElement(
-					'span',
-					null,
-					'Total Customers in Queue: ',
-					this.props.merchantData.total_cust_in_queue
+					'div',
+					{ className: 'merchant-status' },
+					React.createElement(
+						'div',
+						{ className: 'merchant-status-text' },
+						'Total in Queue:',
+						React.createElement(
+							'div',
+							{ className: 'merchant-status-number' },
+							this.props.merchantData.total_cust_in_queue
+						)
+					),
+					React.createElement(
+						'div',
+						{ className: 'merchant-status-text' },
+						'Estimated Waiting Time (Mins):',
+						React.createElement(
+							'div',
+							{ className: 'merchant-status-number' },
+							this.props.merchantData.total_est_waiting_time
+						)
+					)
 				),
 				React.createElement(
-					'span',
-					null,
-					'Total Estimated Waiting Time: ',
-					this.props.merchantData.total_est_waiting_time
-				),
-				React.createElement(
-					'span',
-					null,
-					'Time per Ticket: ',
-					this.props.merchantData.time_per_ticket
-				),
-				React.createElement(
-					'span',
-					null,
-					'Next Ticket Number: ',
-					this.props.merchantData.next_ticket_num
-				)
-			),
-			React.createElement(
-				'button',
-				{ onClick: this.sendDecreaseTimeRequestToBackend },
-				React.createElement(
-					'span',
-					null,
-					' Decrease '
-				)
-			),
-			React.createElement(
-				'button',
-				{ onClick: this.sendIncreaseTimeRequestToBackend },
-				React.createElement(
-					'span',
-					null,
-					' Increase '
-				)
-			),
-			React.createElement(
-				'button',
-				{ onClick: this.sendDequeueRequestToBackend },
-				React.createElement(
-					'span',
-					null,
-					' Pop '
+					'div',
+					{ className: 'merchant-controls' },
+					React.createElement('div', { className: 'merchant-controls-box' }),
+					React.createElement(
+						'div',
+						{ className: 'merchant-controls-time-header' },
+						'Time Per Ticket'
+					),
+					React.createElement(
+						'div',
+						{ className: 'merchant-controls-time' },
+						React.createElement(
+							'button',
+							{ className: 'merchant-controls-arrow', onClick: this.sendDecreaseTimeRequestToBackend },
+							'◀'
+						),
+						React.createElement(
+							'div',
+							{ className: 'merchant-controls-arrow-text' },
+							this.props.merchantData.time_per_ticket
+						),
+						React.createElement(
+							'button',
+							{ className: 'merchant-controls-arrow', onClick: this.sendIncreaseTimeRequestToBackend },
+							'▶'
+						)
+					),
+					React.createElement(
+						'div',
+						{ className: 'merchant-controls-dequeue' },
+						React.createElement(
+							'div',
+							{ className: 'merchant-controls-dequeue-text' },
+							this.props.merchantData.next_ticket_num
+						),
+						React.createElement(
+							'button',
+							{ className: 'merchant-controls-dequeue-button', onClick: this.sendDequeueRequestToBackend },
+							'Pop Next Ticket'
+						)
+					)
 				)
 			)
 		);
@@ -103,13 +119,9 @@ var App = React.createClass({
 	},
 
 	render: function render() {
-		return React.createElement(
-			'div',
-			null,
-			React.createElement(MerchantStatus, {
-				merchantData: this.state.merchantData
-			})
-		);
+		return React.createElement(MerchantStatus, {
+			merchantData: this.state.merchantData
+		});
 	}
 });
 

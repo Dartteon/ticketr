@@ -1,4 +1,6 @@
 var uuid = require('uuid');
+var config = require('../config.json');
+var twilioClient = require('../twilioClient');
 
 var queue = [];
 // var clients = [];
@@ -46,10 +48,16 @@ function createTicket(customerData) {
     console.log("Customer data received " + JSON.stringify(customerData));
     var customerId = customerData.customerId;
     var clientId = customerData.clientId;
+    var customerPhone = customerData.customerPhone;
     if (customerId == null || customerId == undefined || customerId == "undefined") {
         //Customer is new - generate a new UUID for him!
         customerId = uuid.v4();
         console.log("Generated new UUID for customer " + customerId + "\n\n\n");
+    }
+    if (clientIdToTicket[clientId]) {
+        //Client has already requested for a ticket before
+        console.log("Customer client has already requested for ticket before");
+        return;
     }
     if (custIdToTicket[customerId]) {
         //customer already has a ticket!
@@ -63,7 +71,8 @@ function createTicket(customerData) {
     var newTicket = {
         ticket_num: ticketNum,
         customer_id: customerId,
-        client_id: clientId
+        client_id: clientId,
+        customer_phone: customerPhone
     }
     clientIdToTicket[clientId] = newTicket;
     custIdToTicket[customerId] = newTicket;
@@ -72,10 +81,10 @@ function createTicket(customerData) {
     queue.push(newTicket);
     console.log("New ticket created = " + JSON.stringify(newTicket));
 
-    console.log("clientIdToTicket\n" + JSON.stringify(clientIdToTicket) + "\n\n");
-    console.log("custIdToClientId\n" + JSON.stringify(custIdToClientId) + "\n\n");
-    console.log("clientIdToCustId\n" + JSON.stringify(clientIdToCustId) + "\n\n");
-    console.log("custIdToTicket\n" + JSON.stringify(custIdToTicket) + "\n\n");
+    // console.log("clientIdToTicket\n" + JSON.stringify(clientIdToTicket) + "\n\n");
+    // console.log("custIdToClientId\n" + JSON.stringify(custIdToClientId) + "\n\n");
+    // console.log("clientIdToCustId\n" + JSON.stringify(clientIdToCustId) + "\n\n");
+    // console.log("custIdToTicket\n" + JSON.stringify(custIdToTicket) + "\n\n");
 
     updateAllClients();
     // dequeueTicket();
@@ -179,10 +188,10 @@ function dequeueTicket() {
     console.log("Poppedcustid = " + poppedCustId + "\n\n");
     console.log("Dequeue ticket called, q len = " + queue.length);
 
-    console.log("clientIdToTicket\n" + JSON.stringify(clientIdToTicket) + "\n\n");
-    console.log("custIdToClientId\n" + JSON.stringify(custIdToClientId) + "\n\n");
-    console.log("clientIdToCustId\n" + JSON.stringify(clientIdToCustId) + "\n\n");
-    console.log("custIdToTicket\n" + JSON.stringify(custIdToTicket) + "\n\n");
+    // console.log("clientIdToTicket\n" + JSON.stringify(clientIdToTicket) + "\n\n");
+    // console.log("custIdToClientId\n" + JSON.stringify(custIdToClientId) + "\n\n");
+    // console.log("clientIdToCustId\n" + JSON.stringify(clientIdToCustId) + "\n\n");
+    // console.log("custIdToTicket\n" + JSON.stringify(custIdToTicket) + "\n\n");
 
     if (poppedClient == undefined) {
         console.log("Error popping");
@@ -190,10 +199,17 @@ function dequeueTicket() {
     }
 
     poppedClient.emit('send:ticket', {
-        ticket_num: "Your Turn!",
+        ticket_num: "Your Turn! (" + poppedTicket.ticket_num + ")",
         num_in_front: 0,
         est_wait_time: 0
     });
+
+    var customerPhone = poppedTicket.customer_phone;
+    if (customerPhone != undefined && customerPhone.length == 8) {
+        customerPhone = '(+65)' + customerPhone;
+        var msg = "Your ticket (" + poppedTicket.ticket_num + ") has been called!";
+        twilioClient.sendSms(customerPhone, msg);
+    }
 
     delete custClients[poppedClientId];
     delete clientIdToTicket[poppedClientId];
