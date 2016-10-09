@@ -19,22 +19,36 @@ var MerchantStatus = React.createClass({
 			{
 				this.props.merchantData == null ?
 					<div className="loading"></div>
-				: <div>
-							<span>Total Customers in Queue: {this.props.merchantData.total_cust_in_queue}</span>
-							<span>Total Estimated Waiting Time: {this.props.merchantData.total_est_waiting_time}</span>
-							<span>Time per Ticket: {this.props.merchantData.time_per_ticket}</span>
-							<span>Next Ticket Number: {this.props.merchantData.next_ticket_num}</span>
+				: <div className="merchant">
+						<div className="merchant-status">
+							<div className="merchant-status-text">
+								Total in Queue:
+								<div className="merchant-status-number">
+									{this.props.merchantData.total_cust_in_queue}
+								</div>
+							</div>
+							<div className="merchant-status-text">
+								Estimated Waiting Time (Mins):
+								<div className="merchant-status-number">
+									{this.props.merchantData.total_est_waiting_time}
+								</div>
+							</div>
+						</div>
+						<div className="merchant-controls">
+							<div className="merchant-controls-box"></div>
+							<div className="merchant-controls-time-header">Time Per Ticket</div>
+							<div className="merchant-controls-time">
+								<button className="merchant-controls-arrow" onClick={this.sendDecreaseTimeRequestToBackend}>&#9664;</button>
+								<div className="merchant-controls-arrow-text">{this.props.merchantData.time_per_ticket}</div>
+								<button className="merchant-controls-arrow" onClick={this.sendIncreaseTimeRequestToBackend}>&#9654;</button>
+							</div>
+							<div className="merchant-controls-dequeue">
+								<div className="merchant-controls-dequeue-text">{this.props.merchantData.next_ticket_num}</div>
+								<button className="merchant-controls-dequeue-button" onClick={this.sendDequeueRequestToBackend}>Pop Next Ticket</button>
+							</div>
+						</div>
 					</div>
 			}
-			<button onClick={this.sendDecreaseTimeRequestToBackend}>
-				<span> Decrease </span>
-			</button>
-			<button onClick={this.sendIncreaseTimeRequestToBackend}>
-				<span> Increase </span>
-			</button>
-			<button onClick={this.sendDequeueRequestToBackend}>
-				<span> Pop </span>
-			</button>
 			</div>
 		);
 	}
@@ -63,11 +77,9 @@ var App = React.createClass({
 
 	render() {
 		return (
-			<div>
-				<MerchantStatus
-					merchantData={this.state.merchantData}
-				/>
-			</div>
+			<MerchantStatus
+				merchantData={this.state.merchantData}
+			/>
 		);
 	}
 });

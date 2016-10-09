@@ -8,38 +8,6 @@ html {
   font-family: 'Comfortaa', cursive;
 }
 
-.num-in-front {
-  position: absolute;
-  left: 0;
-  top: 50px;
-}
-
-.est-time {
-  position: absolute;
-  left: 0;
-  top: 120px;
-}
-
-.num-in-front,
-.est-time {
-  background-color: #e6e1db;
-  height: 50px;
-  width: 500px;
-  -moz-border-radius: 30px;
-	-webkit-border-radius: 30px;
-  border-top-left-radius: 100%0px;
-  border-bottom-left-radius: 100%0px;
-}
-
-.num-in-front-text,
-.est-time-text {
-  font-weight: bold;
-  font-size: 28px;
-  color: #545a5b;
-  padding-left: 28px;
-  padding-top: 8px;
-}
-
 .loading,
 .loading:before,
 .loading:after {
@@ -138,112 +106,158 @@ html {
   100% { transform: translateX(-100px);}
 }
 
-.ticket-machine {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin-left: auto;
-  margin-right: auto;
-  width: 50%;
-  height: 50px;
-  background-color: #628489;
-  -moz-border-radius: 30px;
-	-webkit-border-radius: 30px;
-  border-bottom-left-radius: 100%0px;
-  border-bottom-right-radius: 100%0px;
-}
-
-.ticket-machine-slot {
-  position: absolute;
-  bottom: 50px;
-  left: 0;
-  right: 0;
-  margin-left: auto;
-  margin-right: auto;
-  width: 80%;
-  height: 50px;
-  background-color: #545a5b;
-  -moz-border-radius: 30px;
-	-webkit-border-radius: 30px;
-  border-bottom-left-radius: 100%0px;
-  border-bottom-right-radius: 100%0px;
-}
-
-.ticket-machine-slot-hole {
-  position: absolute;
-  bottom: 12.5px;
-  left: 0;
-  right: 0;
-  margin-left: auto;
-  margin-right: auto;
-  width: 80%;
-  height: 25px;
-  background-color: #cac9c9;
-  -moz-border-radius: 30px;
-	-webkit-border-radius: 30px;
-  border-radius: 30px;
-}
-
-.get-ticket-button {
-  margin-top: 7.5px;
-  height: 40px;
+.merchant {
   width: 100%;
-  background-color: #537074;
-  -moz-border-radius: 30px;
-	-webkit-border-radius: 30px;
-  border-bottom-left-radius: 100%0px;
-  border-bottom-right-radius: 100%0px;
-  border-color: transparent;
+  height: 100%;
 }
 
-.get-ticket-button:hover {
-  border-style: solid;
-  border-top-color: #57777c;
+.merchant-status {
+  padding-top: 50px;
+  width: 100%;
+  text-align: center;
 }
 
-.get-ticket-button:active {
-  border-style: solid;
-  border-top-color: #257580;
+ @media only screen and (max-width : 480px) {
+   .merchant-status-text {
+     display: block;
+     float: none;
+   }
+ }
+
+@media only screen and (min-width : 992px) {
+  .merchant-status-text {
+    display: inline;
+  }
+  .merchant-status-text:nth-of-type(1) {
+    float: left;
+    padding-left: 10%;
+  }
+  .merchant-status-text:nth-of-type(2) {
+    float: right;
+    padding-right: 10%;
+  }
 }
 
-.get-ticket-text {
-  font-family: 'Comfortaa', cursive;
-  color: #cac9c9;
+.merchant-status-number {
+  font-size: 64px;
+}
+
+.merchant-status-number-text {
+  display: inline;
+}
+
+.merchant-status-text,
+.merchant-status-number-text {
+  color: #e6e1db;
   font-size: 24px;
 }
 
-.ticket {
+.merchant-controls {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  text-align: center;
+}
+
+.merchant-controls-box {
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+	height: 400px;
+	background: #545a5b;
+  -moz-border-radius: 12px;
+	-webkit-border-radius: 12px;
+	border-radius: 12px;
+  border: 10px dotted #628489;
+}
+
+.merchant-controls-time-header {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 350px;
+  margin-left: auto;
+  margin-right: auto;
+  color: #e6e1db;
+  font-size: 24px;
+}
+
+.merchant-controls-time {
   display: block;
   position: absolute;
-  bottom: 75px;
-  left: 25%;
-  width: 50%;
-  height: 236px;
-  line-height: 200px;
-  text-align: center;
-  vertical-align: middle;
-  background: #e6e1db;
-  text-decoration: none;
+  left: 0;
+  right: 0;
+  bottom: 250px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.ticket:before {
-  content: " ";
+.merchant-controls-arrow,
+.merchant-controls-arrow-text,
+.merchant-controls-arrow-number {
+  display: inline;
+}
+
+.merchant-controls-arrow {
+  height: 64px;
+  width: 64px;
+  background: #628489;
+  font-size: 36px;
+  color: #353a3b;
+}
+
+.merchant-controls-arrow-text {
+  font-size: 26px;
+  color: #e6e1db;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.merchant-controls-dequeue {
   display: block;
-  position: relative;
-  bottom: 0px
-  left: 0px;
-  width: 100%;
-  height: 36px;
-  background: linear-gradient(#ec795d 0%, transparent 0%), linear-gradient(135deg, #e6e1db 33.33%, transparent 33.33%) 0 0%, #e6e1db linear-gradient(45deg, #e6e1db 33.33%, #ec795d 33.33%) 0 0%;
-  background: -webkit-linear-gradient(#ec795d 0%, transparent 0%), -webkit-linear-gradient(135deg, #e6e1db 33.33%, transparent 33.33%) 0 0%, #e6e1db -webkit-linear-gradient(45deg, #e6e1db 33.33%, #ec795d 33.33%) 0 0%;
-  background: -o-linear-gradient(#ec795d 0%, transparent 0%), -o-linear-gradient(135deg, #e6e1db 33.33%, transparent 33.33%) 0 0%, #e6e1db -o-linear-gradient(45deg, #e6e1db 33.33%, #ec795d 33.33%) 0 0%;
-  background: -moz-linear-gradient(#ec795d 0%, transparent 0%), -moz-linear-gradient(135deg, #e6e1db 33.33%, transparent 33.33%) 0 0%, #e6e1db -moz-linear-gradient(45deg, #e6e1db 33.33%, #ec795d 33.33%) 0 0%;
-  background-repeat: repeat-x;
-  background-size: 0px 100%, 9px 27px, 9px 27px;
+  border-top: 5px solid #628489;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 180px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
 }
 
-.ticket label {
-  color: #545a5b;
-  font-size: 30px;
+.merchant-controls-dequeue-text {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 56px;
+  color: #e6e1db;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.merchant-controls-dequeue-button {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100px;
+  margin-left: auto;
+  margin-right: auto;
+  height: 48px;
+  width: 200px;
+  background: #628489;
+  font-family: 'Comfortaa', cursive;
+  font-size: 20px;
+  color: #e6e1db;
 }
