@@ -100,8 +100,55 @@ html {
     height: 5em;
   }
 }
+/**/
+.queue-animate{
+  width: 100vh;
+  height: 100px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 
-.queue-animation {
+.in-queue {
+  content: " ";
+  width: 100px;
+  height: 100px;
+  background: #545a5b;
+  border-radius: 100%;
+  position: absolute;
+  animation: shift 4s linear infinite;
+}
+
+.in-queue:nth-of-type(1) { animation-delay: -.4s; }
+.in-queue:nth-of-type(2) { animation-delay: -.8s; }
+.in-queue:nth-of-type(3) { animation-delay: -1.2s; }
+.in-queue:nth-of-type(4) { animation-delay: -1.6s; }
+
+@keyframes shift {
+  0%{
+    /*left: -300px;*/
+    opacity: 0;
+    background-color: yellow;
+  }
+  10% {
+    left: 0;
+    opacity: 1;
+  }
+  90% {
+    left: 100%;
+    opacity: 1;
+  }
+  100%{
+    left: (100% + 300px);
+    background-color: red;
+    opacity: 0;
+  }
+}
+
+/**/
+
+/*.queue-animation {
   position: relative;
   height: 500px;
   line-height: 1000px;
@@ -136,7 +183,7 @@ html {
 @-webkit-keyframes shift {
   0% { transform: translateX(0px);}
   100% { transform: translateX(-100px);}
-}
+}*/
 
 .ticket-machine {
   position: absolute;

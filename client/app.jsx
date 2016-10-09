@@ -200,6 +200,10 @@ var App = React.createClass({
 		socket.on('send:ticket', this._receiveTicket);
 		socket.on('send:queue', this._receiveQueue);
 		this.sendCustomerIdToBackend();
+		// var newURL = window.location.protocol + "//" + window.location.host + "/" + window.location.pathname;
+		// var pathArray = window.location.pathname.split( '/' );
+		// console.log('URL: ', newURL);
+		// console.log('path: ', pathArray);
 	},
 
 	_initialize(data) {
@@ -292,13 +296,20 @@ var App = React.createClass({
 					queue={this.state.queue}
 					ticket={this.state.ticket}
 				/>
-				<div className="queue-animation">
+				{/*<div className="queue-animation">
 					<div className="in-queue front"></div>
 					<div className="in-queue"></div>
 					<div className="in-queue"></div>
 					<div className="in-queue"></div>
 					<div className="in-queue"></div>
 					<div className="in-queue back"></div>
+				</div>*/}
+				<div className="queue-animate">
+				  <div className="in-queue"></div>
+				  <div className="in-queue"></div>
+				  <div className="in-queue"></div>
+				  <div className="in-queue"></div>
+				  <div className="in-queue"></div>
 				</div>
 				<TicketStatus
 					ticket={this.state.ticket}
