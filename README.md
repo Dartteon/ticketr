@@ -6,10 +6,10 @@ ticketr uses socket.io to push updates about the queue to merchants and customer
 
 First, grab the dependencies:
 
-   	npm install
+	npm install
 	npm run build
 	npm run buildadmin
-    	npm start
+	npm start
 
 Go to `localhost:5000` as a customer or `localhost:5000/admin` as admin!
 
